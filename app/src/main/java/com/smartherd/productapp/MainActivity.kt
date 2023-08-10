@@ -506,7 +506,6 @@ class MainActivity : AppCompatActivity() {
 
         messageBtn.setOnClickListener{
             alert.dismiss()
-            loadData()
         }
 
         alert.show()
