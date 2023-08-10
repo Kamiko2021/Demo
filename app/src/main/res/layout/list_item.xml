@@ -16,7 +16,7 @@
 
 <LinearLayout
     android:orientation="vertical"
-    android:layout_width="210dp"
+    android:layout_width="250dp"
     android:layout_height="wrap_content">
  <TextView
      android:id="@+id/itemName"
@@ -46,9 +46,9 @@
 
   <Button
       android:id="@+id/deleteBtn"
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:text="@string/delete_label"
+      android:layout_width="60dp"
+      android:layout_height="60dp"
+      android:background="@drawable/delete_icon"
       android:visibility="visible"/>
 
  </LinearLayout>

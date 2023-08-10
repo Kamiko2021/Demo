@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,6 +24,7 @@ import com.google.gson.reflect.TypeToken
 import com.smartherd.productapp.adapters.ItemListAdapter
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -53,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         addBtn = findViewById(R.id.addItemBtn)
         recv =findViewById(R.id.itemListRecyclerView)
-        searchEditext = findViewById(R.id.searchEdittext)
+        searchEditext = findViewById(R.id.searchEdtxt)
 
 
         itemList = ArrayList()
@@ -92,18 +94,23 @@ class MainActivity : AppCompatActivity() {
             val currentDate = LocalDateTime.now().format(formatter)
             saveItem(save,"save",0,currentDate) }
 
-        searchEditext.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//        searchEditext.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//
+//            }
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                itemAdapter.filterItems(searchEditext.text.toString()) // Call the filterItems function
+//            }
+//            override fun afterTextChanged(s: Editable?) {
+//
+//            }
+//
+//        })
+        searchEditext.doAfterTextChanged {
+            itemAdapter.filterItems(searchEditext.text.toString())
+            Log.d("search input: ", searchEditext.text.toString())
+        }
 
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString().trim()
-                itemAdapter.filterItems(query) // Call the filterItems function
-            }
-
-        })
         loadData()
     }
 
@@ -323,40 +330,7 @@ class MainActivity : AppCompatActivity() {
         okBTN.setOnClickListener {
 
         if (method.equals("save")){
-
-                val name = regex.replace(itemName.text.toString().trim(), " ")
-                val price = itemPrice.text.toString()
-                val quantity = itemQuantity.text.toString()
-
-            if (quantity.toInt() < 0 && price.toDouble() < 0){
-                isNotInteger.visibility = View.VISIBLE
-                isNotDouble.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            } else if (quantity.toInt() < 0){
-                isNotInteger.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            }
-            else if (price.toDouble() < 0){
-                isNotDouble.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            }
-            else{
-                crud(name.capitalize(), price, quantity,position,method,createdDate)
-                itemName.setText("")
-                itemPrice.setText("")
-                itemQuantity.setText("")
-                alert.dismiss()
-
-            }
-
-                    isEmpty.visibility = View.GONE
-                    isEmptyPrice.visibility = View.GONE
-                    isEmptyQuantity.visibility =View.GONE
-
-            }
-
-            else if (method.equals("update")) {
-            val name = regex.replace(itemName.text.toString().trim(), " ")
+            val name = itemName.text.toString().trim().toLowerCase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
             val price = itemPrice.text.toString()
             val quantity = itemQuantity.text.toString()
 
@@ -367,24 +341,44 @@ class MainActivity : AppCompatActivity() {
             } else if (quantity.toInt() < 0){
                 isNotInteger.visibility = View.VISIBLE
                 okBTN.isEnabled = false
-            }
-            else if (price.toDouble() < 0){
+            } else if (price.toDouble() < 0){
                 isNotDouble.visibility = View.VISIBLE
                 okBTN.isEnabled = false
-            }
-            else{
-                crud(name.capitalize(), price, quantity,position,method,createdDate,updatedDate)
+            } else {
+                crud(name, price, quantity, position, method, createdDate)
                 itemName.setText("")
                 itemPrice.setText("")
                 itemQuantity.setText("")
                 alert.dismiss()
             }
 
-            isEmpty.visibility = View.GONE
-            isEmptyPrice.visibility = View.GONE
-            isEmptyQuantity.visibility =View.GONE
-
             }
+
+            else if (method.equals("update")) {
+            val name = itemName.text.toString().trim().toLowerCase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            val price = itemPrice.text.toString()
+            val quantity = itemQuantity.text.toString()
+
+            if (quantity.toInt() < 0 && price.toDouble() < 0){
+                isNotInteger.visibility = View.VISIBLE
+                isNotDouble.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else if (quantity.toInt() < 0){
+                isNotInteger.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else if (price.toDouble() < 0){
+                isNotDouble.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else {
+                crud(name, price, quantity, position, method, createdDate, updatedDate)
+                itemName.setText("")
+                itemPrice.setText("")
+                itemQuantity.setText("")
+                alert.dismiss()
+            }
+
+
+        }
         }
         closeBTN.setOnClickListener {
             itemName.setText("")
@@ -431,8 +425,8 @@ class MainActivity : AppCompatActivity() {
         var gson = Gson()
         var unformatPrice=price.toDouble()
         Log.d("Double not rounded off", "${unformatPrice}")
-//        val roundOff = DecimalFormat("#0.00")
-        val roundedOffPrice = BigDecimal(unformatPrice).setScale(2, RoundingMode.HALF_UP).toDouble().toString()
+        val roundOff = DecimalFormat("0.00")
+        val roundedOffPrice = roundOff.format(unformatPrice)
         Log.d("rounded off", "${roundedOffPrice}")
         val existingItem = itemList.find {
             it.itemName.equals(name, ignoreCase = true)
@@ -452,11 +446,11 @@ class MainActivity : AppCompatActivity() {
                 existingItem.dateUpdated =updatedDate
                 messageModal(modal, "Item Updated", "Success")
                 saveItemListToSharedPreferences()
+                loadData()
             } else {
                 itemList.set(position, Items("$name", roundedOffPrice, quantity.toInt(),createdDate,updatedDate))
                 messageModal(modal, "Item Updated", "Success")
                 saveItemListToSharedPreferences()
-                loadData()
             }
         } else if (crudType.equals("save")) {
             if (existingItem == null) {
@@ -466,6 +460,7 @@ class MainActivity : AppCompatActivity() {
                 loadData()
             } else {
                 messageModal(modal, "Already Exist", "Fail")
+                loadData()
             }
         }
     }
