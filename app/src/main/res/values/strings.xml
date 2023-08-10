@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ProductApp</string>
+
+
+    <string name="product_item_name">item 1</string>
+    <string name="product_item_price">$0.00</string>
+    <string name="product_item_quantity">1 pc/s</string>
+
+    <string name="product_item_header">Products</string>
+    <string name="add_item_header">Add Product</string>
+    <string name="update_item_header">Update Product</string>
+
+    <string name="add_itemName_label">Name*</string>
+    <string name="add_itemPrice_label">Price*</string>
+    <string name="add_itemQuantity_label">Quantity*</string>
+
+    <string name="add_itemName_hint">Name (Required)</string>
+    <string name="add_itemPrice_hint">$0.00 (Required)</string>
+    <string name="add_itemQuantity_hint">0 (Required)</string>
+
+    <string name="inputValidation_isEmpty">Item name is empty</string>
+    <string name="inputValidation_isEmpty_price">Item price is empty</string>
+    <string name="inputValidation_isEmpty_quantity">Item quantity is empty</string>
+
+    <string name="inputValidation_isNotDouble">Input invalid</string>
+    <string name="duplication_item_error">Item already existed</string>
+    <string name="cancel_button_label">Close</string>
+    <string name="ok_button_label">Save</string>
+
+    <string name="search_label">Search</string>
+    <string name="delete_label">delete</string>
+    <string name="message_label">Message</string>
+    <string name="message_exitBtn_label">Ok</string>
+
+</resources>
