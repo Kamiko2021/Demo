@@ -329,40 +329,7 @@ class MainActivity : AppCompatActivity() {
         okBTN.setOnClickListener {
 
         if (method.equals("save")){
-
-                val name = regex.replace(itemName.text.toString().trim(), " ")
-                val price = itemPrice.text.toString()
-                val quantity = itemQuantity.text.toString()
-
-            if (quantity.toInt() < 0 && price.toDouble() < 0){
-                isNotInteger.visibility = View.VISIBLE
-                isNotDouble.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            } else if (quantity.toInt() < 0){
-                isNotInteger.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            }
-            else if (price.toDouble() < 0){
-                isNotDouble.visibility = View.VISIBLE
-                okBTN.isEnabled = false
-            }
-            else{
-                crud(name.capitalize(), price, quantity,position,method,createdDate)
-                itemName.setText("")
-                itemPrice.setText("")
-                itemQuantity.setText("")
-                alert.dismiss()
-
-            }
-
-                    isEmpty.visibility = View.GONE
-                    isEmptyPrice.visibility = View.GONE
-                    isEmptyQuantity.visibility =View.GONE
-
-            }
-
-            else if (method.equals("update")) {
-            val name = regex.replace(itemName.text.toString().trim(), " ")
+            val name = itemName.text.toString().trim().toLowerCase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
             val price = itemPrice.text.toString()
             val quantity = itemQuantity.text.toString()
 
@@ -373,24 +340,44 @@ class MainActivity : AppCompatActivity() {
             } else if (quantity.toInt() < 0){
                 isNotInteger.visibility = View.VISIBLE
                 okBTN.isEnabled = false
-            }
-            else if (price.toDouble() < 0){
+            } else if (price.toDouble() < 0){
                 isNotDouble.visibility = View.VISIBLE
                 okBTN.isEnabled = false
-            }
-            else{
-                crud(name.capitalize(), price, quantity,position,method,createdDate,updatedDate)
+            } else {
+                crud(name, price, quantity, position, method, createdDate)
                 itemName.setText("")
                 itemPrice.setText("")
                 itemQuantity.setText("")
                 alert.dismiss()
             }
 
-            isEmpty.visibility = View.GONE
-            isEmptyPrice.visibility = View.GONE
-            isEmptyQuantity.visibility =View.GONE
-
             }
+
+            else if (method.equals("update")) {
+            val name = itemName.text.toString().trim().toLowerCase().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            val price = itemPrice.text.toString()
+            val quantity = itemQuantity.text.toString()
+
+            if (quantity.toInt() < 0 && price.toDouble() < 0){
+                isNotInteger.visibility = View.VISIBLE
+                isNotDouble.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else if (quantity.toInt() < 0){
+                isNotInteger.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else if (price.toDouble() < 0){
+                isNotDouble.visibility = View.VISIBLE
+                okBTN.isEnabled = false
+            } else {
+                crud(name, price, quantity, position, method, createdDate, updatedDate)
+                itemName.setText("")
+                itemPrice.setText("")
+                itemQuantity.setText("")
+                alert.dismiss()
+            }
+
+
+        }
         }
         closeBTN.setOnClickListener {
             itemName.setText("")
