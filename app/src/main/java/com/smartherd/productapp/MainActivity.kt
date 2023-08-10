@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken
 import com.smartherd.productapp.adapters.ItemListAdapter
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -424,8 +425,8 @@ class MainActivity : AppCompatActivity() {
         var gson = Gson()
         var unformatPrice=price.toDouble()
         Log.d("Double not rounded off", "${unformatPrice}")
-//        val roundOff = DecimalFormat("#0.00")
-        val roundedOffPrice = BigDecimal(unformatPrice).setScale(2, RoundingMode.HALF_UP).toDouble().toString()
+        val roundOff = DecimalFormat("0.00")
+        val roundedOffPrice = roundOff.format(unformatPrice)
         Log.d("rounded off", "${roundedOffPrice}")
         val existingItem = itemList.find {
             it.itemName.equals(name, ignoreCase = true)
