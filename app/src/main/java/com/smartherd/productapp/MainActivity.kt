@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         addBtn = findViewById(R.id.addItemBtn)
         recv =findViewById(R.id.itemListRecyclerView)
-        searchEditext = findViewById(R.id.searchEdittext)
+        searchEditext = findViewById(R.id.searchEdtxt)
 
 
         itemList = ArrayList()
@@ -92,18 +93,23 @@ class MainActivity : AppCompatActivity() {
             val currentDate = LocalDateTime.now().format(formatter)
             saveItem(save,"save",0,currentDate) }
 
-        searchEditext.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//        searchEditext.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//
+//            }
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                itemAdapter.filterItems(searchEditext.text.toString()) // Call the filterItems function
+//            }
+//            override fun afterTextChanged(s: Editable?) {
+//
+//            }
+//
+//        })
+        searchEditext.doAfterTextChanged {
+            itemAdapter.filterItems(searchEditext.text.toString())
+            Log.d("search input: ", searchEditext.text.toString())
+        }
 
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-            override fun afterTextChanged(s: Editable?) {
-                val query = s.toString().trim()
-                itemAdapter.filterItems(query) // Call the filterItems function
-            }
-
-        })
         loadData()
     }
 
@@ -500,6 +506,7 @@ class MainActivity : AppCompatActivity() {
 
         messageBtn.setOnClickListener{
             alert.dismiss()
+            loadData()
         }
 
         alert.show()

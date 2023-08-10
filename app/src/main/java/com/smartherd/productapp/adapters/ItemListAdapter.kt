@@ -28,35 +28,50 @@ class ItemListAdapter(val c:Context, private val originalItemList:ArrayList<Item
 
     // ... Rest of the adapter code ...
 
-    fun filterItems(query: String) {
-        filteredList.clear() // Clear the previous filtered results
+    fun filterItems(query: String?=null) {
+        filteredList.clear()
 
-        if (query.isNotEmpty()) {
-            val lowerCaseQuery = query.toLowerCase()
-            for (item in originalItemList) {
-                val itemNameWithoutSpaces = item.itemName!!.toLowerCase().replace("\\s+".toRegex(), "")
-                if (itemNameWithoutSpaces.contains(lowerCaseQuery.replace("\\s+".toRegex(), "")) && itemNameWithoutSpaces.length > 1) {
-                    filteredList.add(item)
+        if (query != null) {
+            val lowerCaseQuery = query.trim().toLowerCase()
+
+            if (lowerCaseQuery.isNotEmpty()) {
+                for (item in originalItemList) {
+                    val itemNameWithoutSpaces = item.itemName!!.toLowerCase().replace("\\s+".toRegex(), "")
+                    if (itemNameWithoutSpaces.contains(lowerCaseQuery) && itemNameWithoutSpaces.length > 1) {
+                        filteredList.add(item)
+                    }
                 }
             }
+            if (query.isBlank()) {
+                Log.d("isBlank ", "true")
+                // Add items with more than one word to the filtered list
+                for (item in originalItemList) {
+                    val itemNameWords = item.itemName!!.split(" ").filter { it.isNotBlank() }
+                    if (itemNameWords.size > 1) {
+                        filteredList.add(item)
+                    }
+                }
+
+            }
+            if (query.isNullOrEmpty()){
+//                filteredList = originalItemList
+                Log.d("isEmpty ", "true")
+                loadData()
+            }
+
             itemlist = filteredList
-        } else {
-            filteredList.addAll(originalItemList.filter { it.itemName!!.contains("\\s+".toRegex()) })
-            checkWhiteSpace(query)
         }
 
         notifyDataSetChanged()
     }
-    fun checkWhiteSpace(str :String){
-        val regex = """\s""".toRegex()
-        val containsNoWhitespace = regex.matches(str)
-        Log.d("white space", containsNoWhitespace.toString())
-        if (containsNoWhitespace || str.equals(null)) {
-            itemlist = originalItemList
-        } else {
-            itemlist = filteredList
-        }
-    }
+//    fun checkWhiteSpace(str :String){
+//        val regex = """\s""".toRegex()
+//        val containsNoWhitespace = regex.matches(str)
+//        Log.d("white space", containsNoWhitespace.toString())
+//        if (str.isEmpty()) {
+//            itemlist = originalItemList
+//        }
+//    }
 
 
     interface onItemClickListener{
