@@ -352,6 +352,12 @@ class MainActivity : AppCompatActivity() {
                 alert.dismiss()
             }
 
+            isNotInteger.visibility=View.GONE
+            isNotDouble.visibility=View.GONE
+            isEmptyPrice.visibility = View.GONE
+            isEmpty.visibility = View.GONE
+            isEmptyQuantity.visibility = View.GONE
+
             }
 
             else if (method.equals("update")) {
@@ -376,7 +382,11 @@ class MainActivity : AppCompatActivity() {
                 itemQuantity.setText("")
                 alert.dismiss()
             }
-
+            isNotInteger.visibility=View.GONE
+            isNotDouble.visibility=View.GONE
+            isEmptyPrice.visibility = View.GONE
+            isEmpty.visibility = View.GONE
+            isEmptyQuantity.visibility = View.GONE
 
         }
         }

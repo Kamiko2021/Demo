@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.smartherd.productapp.Items
 import com.smartherd.productapp.R
+import java.lang.IndexOutOfBoundsException
 
 class ItemListAdapter(val c:Context, private val originalItemList:ArrayList<Items>) :
     RecyclerView.Adapter<ItemListAdapter.MyViewHolder>() {
@@ -114,15 +115,21 @@ class ItemListAdapter(val c:Context, private val originalItemList:ArrayList<Item
             }
         }
         if (itemQuantity.text.toString() == "0 pcs"){
+            val infilter = LayoutInflater.from(c)
+            val modal = infilter.inflate(R.layout.modal_alert, null)
             deleteBtn.isEnabled = true
             deleteBtn.setOnClickListener {
-                itemlist.removeAt(position)
-                notifyItemRemoved(position)
-                val infilter = LayoutInflater.from(c)
-                val modal = infilter.inflate(R.layout.modal_alert, null)
-                updateItemListToSharedPreferences(itemlist)
-                loadData()
-                messageModal(modal, "Deleted Successfully", "Success")
+                try {
+                    itemlist.removeAt(position)
+                    notifyItemRemoved(position)
+                    updateItemListToSharedPreferences(itemlist)
+                    loadData()
+                    messageModal(modal, "Deleted Successfully", "Success")
+                }catch (e:IndexOutOfBoundsException){
+                    messageModal(modal, "error: ${e.toString()}", "Fail")
+                }
+
+
             }
         } else {
             deleteBtn.isEnabled = false
