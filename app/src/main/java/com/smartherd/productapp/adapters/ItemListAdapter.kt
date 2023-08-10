@@ -120,9 +120,9 @@ class ItemListAdapter(val c:Context, private val originalItemList:ArrayList<Item
                 notifyItemRemoved(position)
                 val infilter = LayoutInflater.from(c)
                 val modal = infilter.inflate(R.layout.modal_alert, null)
-                messageModal(modal, "Deleted Successfully", "Success")
                 updateItemListToSharedPreferences(itemlist)
                 loadData()
+                messageModal(modal, "Deleted Successfully", "Success")
             }
         } else {
             deleteBtn.isEnabled = false

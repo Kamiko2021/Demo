@@ -446,11 +446,11 @@ class MainActivity : AppCompatActivity() {
                 existingItem.dateUpdated =updatedDate
                 messageModal(modal, "Item Updated", "Success")
                 saveItemListToSharedPreferences()
+                loadData()
             } else {
                 itemList.set(position, Items("$name", roundedOffPrice, quantity.toInt(),createdDate,updatedDate))
                 messageModal(modal, "Item Updated", "Success")
                 saveItemListToSharedPreferences()
-                loadData()
             }
         } else if (crudType.equals("save")) {
             if (existingItem == null) {
@@ -460,6 +460,7 @@ class MainActivity : AppCompatActivity() {
                 loadData()
             } else {
                 messageModal(modal, "Already Exist", "Fail")
+                loadData()
             }
         }
     }
